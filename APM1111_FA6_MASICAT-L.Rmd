@@ -1,0 +1,238 @@
+---
+title: "Formative Assessment 6"
+author: "Lindsy Rossel C. Masicat"
+date: "2024-09-19"
+output: html_document
+---
+
+## Problem 1
+
+The following table shows a frequency distribution of grades on a final examination in college algebra. We will compute the quartiles of the distribution.
+
+### Table 1: Frequency Distribution of Grades
+
+```{r, echo=FALSE}
+library(knitr)
+
+grades_range <- c("90-100", "80-89", "70-79", "60-69", "50-59", "40-49", "30-39")
+frequencies <- c(9, 32, 43, 21, 11, 3, 1)
+
+
+data <- data.frame(Grade = grades_range, `Number of Students` = frequencies)
+
+
+data <- rbind(data, data.frame(Grade = "Total", `Number of Students` = sum(frequencies)))
+
+
+kable(data, format = "html", caption = "Table 1: Frequency Distribution of Grades")
+
+
+cumulative_frequency <- cumsum(frequencies)
+n <- sum(frequencies)
+
+
+Q1_position <- (n + 1) / 4
+Q2_position <- (n + 1) / 2
+Q3_position <- 3 * (n + 1) / 4
+
+
+quartiles <- data.frame(
+Quartile = c("Q1", "Q2", "Q3"),
+Position = c(Q1_position, Q2_position, Q3_position),
+Range = c(grades_range[which(cumulative_frequency >= Q1_position)[1]],
+grades_range[which(cumulative_frequency >= Q2_position)[1]],
+grades_range[which(cumulative_frequency >= Q3_position)[1]])
+)
+
+quartiles
+
+```
+
+## Problem 2
+
+On a final examination in statistics, the mean grade of a group of 150 students was 78 and the standard deviation was 8.0. In algebra, however, the mean final grade of the group was 73 and the standard deviation was 7.6. In which subject was there the greater (a) absolute dispersion and (b) relative dispersion?
+
+```{r 2, echo=FALSE}
+
+mean_stats <- 78
+sd_stats <- 8.0
+
+
+mean_alg <- 73
+sd_alg <- 7.6
+
+if (sd_stats > sd_alg) {
+  result_abs_disp <- "Statistics has a greater absolute dispersion."
+} else if (sd_stats < sd_alg) {
+  result_abs_disp <- "Algebra has a greater absolute dispersion."
+} else {
+  result_abs_disp <- "Both subjects have the same absolute dispersion."
+}
+
+
+sd_stats
+sd_alg
+result_abs_disp
+```
+
+## Problem 3
+
+Prove that the mean and standard deviation of a set of standard scores are equal to 0 and 1, respectively. Use the following problem to illustrate this: Convert the set 6, 2, 8, 7, 5 into standard scores.
+## Mathematical Proof
+
+The formula for converting a raw score \( X_i \) to a standard score (or z-score) is:
+
+\[
+Z_i = \frac{X_i - \mu}{\sigma}
+\]
+
+Where:
+- \( Z_i \) is the z-score,
+- \( X_i \) is the raw score,
+- \( \mu \) is the mean of the data set,
+- \( \sigma \) is the standard deviation of the data set.
+
+Once the z-scores are calculated, the mean of these z-scores will always be 0 and the standard deviation will always be 1. This happens because the z-score transformation shifts the data to have a mean of 0 and scales it to have a standard deviation of 1.
+
+Now, let's illustrate this using the provided data set.
+
+### Step 1: Calculate the Mean and Standard Deviation of the Original Data
+
+```{r 3}
+
+data <- c(6, 2, 8, 7, 5)
+
+
+mean_data <- mean(data)
+
+
+sd_data <- sd(data)
+
+
+z_scores <- (data - mean_data) / sd_data
+
+mean_z <- mean(z_scores)
+sd_z <- sd(z_scores)
+
+
+mean_data
+sd_data
+z_scores
+mean_z
+sd_z
+
+```
+
+## Problem 4
+
+Three masses are measured as 20.48, 35.97, and 62.34 g, with standard deviations of 0.21, 0.46, and 0.54 g, respectively. Find the (a) mean and (b) standard deviation of the sum of the masses.
+### Given Data
+
+- Mass 1: 20.48 g, Standard Deviation: 0.21 g
+- Mass 2: 35.97 g, Standard Deviation: 0.46 g
+- Mass 3: 62.34 g, Standard Deviation: 0.54 g
+
+### (a) Mean of the Sum of the Masses
+
+The mean of the sum is simply the sum of the individual means:
+
+\[
+\mu_{\text{sum}} = \mu_1 + \mu_2 + \mu_3
+\]
+
+Where:
+- \( \mu_1 = 20.48 \) g
+- \( \mu_2 = 35.97 \) g
+- \( \mu_3 = 62.34 \) g
+
+Let's calculate the mean of the sum.
+
+```{r 4, echo=FALSE}
+
+mass_1 <- 20.48
+mass_2 <- 35.97
+mass_3 <- 62.34
+
+
+mean_sum <- mass_1 + mass_2 + mass_3
+
+
+sd_1 <- 0.21
+sd_2 <- 0.46
+sd_3 <- 0.54
+
+
+sd_sum <- sqrt(sd_1^2 + sd_2^2 + sd_3^2)
+
+```
+
+```{r 4ans}
+
+mean_sum
+sd_sum
+
+
+```
+
+## Problem 5
+
+The credit hour distribution at Metropolitan Technological College is as follows:
+
+| Credit Hours (x) | Probability p(x) |
+|-------------------|------------------|
+| 6                 | 0.1              |
+| 9                 | 0.2              |
+| 12                | 0.4              |
+| 15                | 0.2              |
+| 18                | 0.1              |
+
+
+Calculating the mean and variance
+
+```{r 5, echo=FALSE}
+
+x <- c(6, 9, 12, 15, 18)
+p <- c(0.1, 0.2, 0.4, 0.2, 0.1)
+
+
+mu <- sum(x * p)
+
+
+variance <- sum((x - mu)^2 * p)
+
+
+mu
+variance
+```
+## Possible Samples of Size 2 
+```{r 1}
+
+samples <- expand.grid(x1 = x, x2 = x)
+
+
+samples$mean <- rowMeans(samples)
+
+
+samples$probability <- p[match(samples$x1, x)] * p[match(samples$x2, x)]
+
+print(samples)
+
+
+mean_probabilities <- aggregate(probability ~ mean, data = samples, FUN = sum)
+
+
+results <- merge(samples, mean_probabilities, by = "mean", all.x = TRUE)
+
+
+finalresults <- results[, c("x1", "x2", "mean", "probability.y")]
+
+
+colnames(finalresults) <- c("x1", "x2", "mean", "mean_probability")
+
+print(finalresults)
+
+```
+
+
+
+
